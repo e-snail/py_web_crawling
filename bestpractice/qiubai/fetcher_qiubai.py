@@ -29,10 +29,10 @@ class SpiderModel:
         # decode的作用是将其他编码的字符串转换成unicode编码
         unicodePage = myPage.decode("utf-8")
 
-        # joke_authors = re.findall('<a.*?href="/users.*?title=.*?>\n*<h2>(.*?)</h2>\n*</a>', unicodePage, re.S)
-        # authors = []
-        # for item in joke_authors:
-        #     authors.append(item)
+        joke_authors = re.findall('<a.*?href="/users.*?title=.*?>\n*<h2>(.*?)</h2>\n*</a>', unicodePage, re.S)
+        authors = []
+        for item in joke_authors:
+            authors.append(item)
 
         #    print(unicodePage)
         # 找出所有class="content"的div标记

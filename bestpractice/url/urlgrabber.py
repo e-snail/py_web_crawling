@@ -30,4 +30,24 @@ except urllib.error.HTTPError as e:
 # 请求返回码
 print_msg("return code:", response1.getcode())
 
+# login CSDN
+url_csdn_login = "https://passport.csdn.net/account/login?from=http://my.csdn.net/my/mycsdn"
+values = {"username":"wilbur.unail@gmail.com","password":"bitsnail"}
 
+url_values = urllib.parse.urlencode(values)
+url_values = url_values.encode(encoding='UTF8')
+
+url_last = urllib.request.Request(url_csdn_login, url_values)
+
+try:
+    response = urllib.request.urlopen(url_last)
+except urllib.error.HTTPError as e:
+    print('Error code:',e.code)
+except urllib.error.URLError as e:
+    print('Reason',e.reason)
+
+print_msg("login csdn with return code ", response.getcode())
+
+the_csdn_page = response.read()
+
+print(the_csdn_page)
