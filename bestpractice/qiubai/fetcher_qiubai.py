@@ -18,49 +18,43 @@ class SpiderModel:
         # 将所有的段子都扣出来，添加到列表中并且返回列表
 
     def get_page(self, page):
-        myUrl = " http://www.qiushibaike.com/8hr/page/" + page
-        #      myUrl =" http://www.qiushibaike.com/8hr/page/2"
+        my_url = " http://www.qiushibaike.com/8hr/page/" + page
+        #      my_url =" http://www.qiushibaike.com/8hr/page/2"
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         headers = {'User-Agent': user_agent}
-        req = urllib.request.Request(myUrl, headers=headers)
-        myResponse = urllib.request.urlopen(req)
-        myPage = myResponse.read()
+        req = urllib.request.Request(my_url, headers=headers)
+        my_response = urllib.request.urlopen(req)
+        my_page = my_response.read()
         # encode的作用是将unicode编码转换成其他编码的字符串
         # decode的作用是将其他编码的字符串转换成unicode编码
-        unicodePage = myPage.decode("utf-8")
+        utf8_page = my_page.decode("utf-8")
 
-        # joke_authors = re.findall('<a.*?href="/users.*?title=.*?>\n*<h2>(.*?)</h2>\n*</a>', unicodePage, re.S)
-        # authors = []
-        # for item in joke_authors:
-        #     authors.append(item)
+        pattern_author = '<div class="author.*?>.*?<a.*?<img.*?/>.*?</a>.*?<h2>(.*?)</h2>.*?</a>.*?</div>'
+        joke_authors = re.findall(pattern_author, utf8_page, re.S)
+        authors = []
+        for author in joke_authors:
+            authors.append(author.replace("\n", ""))
 
-        #    print(unicodePage)
-        # 找出所有class="content"的div标记
-        # re.S是任意匹配模式，也就是.可以匹配换行符
-        joke_contents = re.findall('<div.*?class="content".*?>\n*<span>(.*?)</span>\n*</div>', unicodePage, re.S)
+        pattern_content = '<div.*?class="content".*?>\n*<span>(.*?)</span>\n*</div>'
+        joke_contents = re.findall(pattern_content, utf8_page, re.S)
         items = []
         index = 0
-        # print("authors size=" + len(authors) + "   joke_contents size=" + len(items))
         for item in joke_contents:
-            # item 中第一个是div的标题，也就是时间
-            # item 中第二个是div的内容，也就是内容
-            # author_info = "作者:" + items[index]
-            # index += 1
-            items.append("  正文 " + item.replace("\n", ""))
+            author_info = "作者:" + authors[index]
+            index += 1
+            items.append(author_info + "  正文 " + item.replace("\n", ""))
         return items
 
-        # 用于加载新的段子
-
-    def LoadPage(self):
+    def load_page(self):
         # 如果用户未输入quit则一直运行
         while self.enable:
             # 如果pages数组中的内容小于2个
             if len(self.pages) < 2:
                 try:
                     # 获取新的页面中的段子们
-                    myPage = self.get_page(str(self.page))
+                    my_page = self.get_page(str(self.page))
                     self.page += 1
-                    self.pages.append(myPage)
+                    self.pages.append(my_page)
                 except:
                     print('无法链接糗事百科！')
             else:
@@ -69,8 +63,8 @@ class SpiderModel:
     def show_page(self, current_page, page):
         for items in current_page:
             print(u'第%d页' % page, items)
-            myInput = input()
-            if myInput == "quit":
+            my_input = input()
+            if my_input == "quit":
                 self.enable = False
                 break
 
@@ -81,7 +75,7 @@ class SpiderModel:
         print(u'正在加载中请稍候......')
 
         # 新建一个线程在后台加载段子并存储
-        _thread.start_new_thread(self.LoadPage, ())
+        _thread.start_new_thread(self.load_page, ())
 
         # ----------- 加载处理糗事百科 -----------
         while self.enable:
@@ -91,6 +85,7 @@ class SpiderModel:
                 del self.pages[0]
                 self.show_page(current_page, page)
                 page += 1
+
 
 # ----------- 程序的入口处 -----------
 print(u"""

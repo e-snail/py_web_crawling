@@ -1,3 +1,4 @@
+# -*- coding: cp936 -*-
 
 import urllib.request
 import urllib.response
@@ -6,9 +7,8 @@ import re
 import threading
 import time
 
-# -*- coding: cp936 -*-
 # 原文链接 https://my.oschina.net/freestyletime/blog/510724
-__author__ = "christian chen"
+# __author__ = "christian chen"
 
 
 # re.compile()返回RegexObject对象
@@ -17,7 +17,7 @@ class Tool:
         return re.compile('<title.*?>(.*?)</', re.S)
 
     def get_content(self):
-        return re.compile('<div class="author.*?>.*?<a.*?<img.*?/>(.*?)</a>.*?</div>.*?<div.*?class="content.*?>(.*?)</div>.*?class="number.*?>(.*?)</.*?', re.S)
+        return re.compile('<div class="author.*?>.*?<a.*?<img.*?/>.*?</a>.*?<h2>(.*?)</h2>.*?</a>.*?</div>.*?<div.*?class="content.*?>(.*?)</div>.*?class="number.*?>(.*?)</.*?', re.S)
 
 
 # 继承自threading.Thread，需要覆盖run()方法
